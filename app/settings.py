@@ -1,0 +1,1 @@
+SAMPLE_PATH = "/Users/rp/Code/adapt-engine/samples"

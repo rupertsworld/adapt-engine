@@ -1,0 +1,16 @@
+.DS_Store
+**/.DS_Store
+**/*/.DS_Store
+
+**/__pycache__/
+**/*/__pycache/
+*.egg-info
+
+env.sh
+test.wav
+run.py
+outputs/
+states/
+samples/
+presamples/
+presets/
