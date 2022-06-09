@@ -12,17 +12,34 @@ class Session:
         self.params = params
         self.event_queue = EventQueue()
         self.mixer = Mixer()
+        self.hooks = []
+        self.current_hook = 0
 
     def update_params(self, params):
         self.params = params
     
     def get_events(self):
-        event = self.component(clock=self.clock, params=self.params)
+        event = self.component(sess=self)
         return event
     
     def reset_events(self):
         self.mixer.reset_events()
         self.event_queue = EventQueue()
+    
+    def use_state(self, init_value):
+        if len(self.hooks) <= self.current_hook:
+            self.hooks.append(init_value)
+        
+        hook_index = self.current_hook
+
+        def state():
+            return self.hooks[hook_index]
+        
+        def set_state(new_state):
+            self.hooks[hook_index] = new_state
+        
+        self.current_hook += 1
+        return state, set_state
     
     def render(self, duration_secs):
         duration = self.clock.secs(duration_secs)
