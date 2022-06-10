@@ -1,9 +1,11 @@
 from app.settings import *
 from adapt import VST
 
-class Dune(VST):
+# Dune3 – Autumn Water
+
+class AutumnWater(VST):
     sample_path = SAMPLE_PATH
-    durations = [1, 2, 3, 4, 5, 6, 7, 8]
+    durations = [2, 3, 4, 5, 6, 7, 8, 12, 15, 20]
     vst_path = "/Library/Audio/Plug-Ins/VST3/DUNE3.vst3"
 
-dune = Dune()
+autumn_water = AutumnWater()

@@ -19,8 +19,8 @@ class VST(Track):
 
     def __init__(self):
         super().__init__()
-        if 'ADAPT_SAMPLE_PATH' in os.environ:
-            self.sample_path = os.path.abspath(os.environ['ADAPT_SAMPLE_PATH'])
+        if 'ADAPT_PRESAMPLE_PATH' in os.environ:
+            self.sample_path = os.path.abspath(os.environ['ADAPT_PRESAMPLE_PATH'])
         self.sample_path = f"{self.sample_path}/{self.name}"
         self.make_samples_dict()
 
@@ -35,7 +35,7 @@ class VST(Track):
         vst.open_editor()
         graph = [(vst, [])]
         engine.load_graph(graph)
-
+ 
         for note in self.notes:
             print(f"Generating track={self.name} note={note}")
             for vel in self.velocities:
