@@ -3,3 +3,4 @@ from .helpers import *
 from .events import Note, Sample, Group
 from .vst import VST
 from .sampler import Sampler
+from .hooks import *

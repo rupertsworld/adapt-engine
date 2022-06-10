@@ -1,6 +1,3 @@
-from pydub import AudioSegment
-import numpy as np
-
 class Scales:
     MAJOR = (2, 2, 1, 2, 2, 2, 1)
     PENTATONIC = (2, 2, 3, 2, 3)

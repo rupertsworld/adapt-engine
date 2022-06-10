@@ -27,11 +27,11 @@ class Session:
         self.event_queue = EventQueue()
     
     def use_state(self, init_value):
+        hook_index = self.current_hook
+
         if len(self.hooks) <= self.current_hook:
             self.hooks.append(init_value)
         
-        hook_index = self.current_hook
-
         def state():
             return self.hooks[hook_index]
         
@@ -48,6 +48,7 @@ class Session:
         # Generate events
         while self.clock.ticks <= render_start + duration:
             event = self.get_events()
+            self.current_hook = 0
 
             if not event:
                 self.clock.tick()
