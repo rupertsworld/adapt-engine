@@ -13,6 +13,9 @@ class Clock:
     def tick(self):
         self.ticks += 1
 
+    def on_ticks(self, n, offset=0):
+        return not (self.ticks + offset) % n
+
     def on_bars(self, n, offset=0):
         return not (self.ticks + self.ticks_per_bar * offset) % (self.ticks_per_bar * n)
     

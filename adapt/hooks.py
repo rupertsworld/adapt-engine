@@ -1,8 +1,8 @@
 from random import randint
 
-def use_random(options, sess, every_bars=12, deviation_bars=6):
+def use_random(options, sess, every_ticks=96, deviation_ticks=48):
     def get_break():
-        return sess.clock.now() + sess.clock.bars(every_bars) # sess.clock.bars(round(normal(every_bars, deviation_bars)))
+        return sess.clock.now() + every_ticks # sess.clock.bars(round(normal(every_bars, deviation_bars)))
     
     def get_random_index():
         return randint(0, len(options) - 1)

@@ -87,6 +87,6 @@ class VST(Track):
             _, sample = wavfile.read(sample_path)
             insert_at = int(event.offset_secs * SAMPLE_RATE)
             base_audio = np.insert(base_audio, insert_at, sample, axis=0)
-            final_audio += base_audio[:duration_samples] // 5
+            final_audio += base_audio[:duration_samples] // 8
         
         return final_audio

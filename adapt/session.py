@@ -2,7 +2,6 @@ from adapt.settings import *
 from scipy.io import wavfile
 from adapt.mixer import Mixer
 from adapt.clock import Clock
-# from adapt.vst import bounce
 from adapt.events import EventQueue
 
 class Session:

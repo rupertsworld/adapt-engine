@@ -1,8 +1,7 @@
 from random import choice
 from adapt import Note, bracket, get_scale
-from ..tracks.piano import piano
 
-def PianoFlourish(sess, key, octave, scale):
+def RandomNotes(sess, track, key, octave, scale):
     note_interval = 1/4
     piano_scale = get_scale(key + str(octave), scale)
 
@@ -12,7 +11,7 @@ def PianoFlourish(sess, key, octave, scale):
 
     if sess.clock.on_bars(note_interval):
         return Note(
-            track=piano,
+            track=track,
             value=choice(piano_scale),
             velocity=127,
             duration=sess.clock.beats(1)
