@@ -20,15 +20,19 @@ class VST(Track):
     def __init__(self):
         super().__init__()
         if 'ADAPT_PRESAMPLE_PATH' in os.environ:
-            self.sample_path = os.path.abspath(os.environ['ADAPT_PRESAMPLE_PATH'])
+            self.presample_path = os.path.abspath(os.environ['ADAPT_PRESAMPLE_PATH'])
+            self.presample_path = f"{self.presample_path}/{self.name}"
+        if 'ADAPT_SAMPLE_PATH' in os.environ:
+            self.sample_path = os.path.abspath(os.environ['ADAPT_SAMPLE_PATH'])
+
         self.sample_path = f"{self.sample_path}/{self.name}"
         self.make_samples_dict()
 
     def preload(self):
         print(f"\n\nPRELOADING SAMPLES FOR: {self.name}\n")
 
-        if not os.path.exists(self.sample_path):
-            os.makedirs(self.sample_path)
+        if not os.path.exists(self.presample_path):
+            os.makedirs(self.presample_path)
 
         engine = dawdreamer.RenderEngine(SAMPLE_RATE, buffer_size)
         vst = engine.make_plugin_processor('my_track', self.vst_path)

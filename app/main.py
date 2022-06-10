@@ -6,36 +6,21 @@ from app.tracks.piano import piano
 from app.tracks.autumn_water import autumn_water
 
 def Main(sess):
-    if not "excitement" in sess.params:
-        sess.params["excitement"] = 0.5
-    
-    # section = use_random(['breakdown', 'full'], sess=sess, every_ticks=sess.clock.bars(6))
+    if not "excitement" in sess.params: sess.params["excitement"] = 0.5
     
     if sess.params["excitement"] < 0.6:
-        return Group(
-                RandomChords(
-                sess,
-                track=autumn_water,
-                root="C#4",
-                scale=Scales.MAJOR
-            ),
-            RandomNotes(sess, piano, key="C#", octave=5, scale=Scales.PENTATONIC)
-        )
+        chord_track = autumn_water
+        melody_track = piano
     else:
-        return Group(
-            RandomChords(
-                sess,
-                track=dune,
-                root="C#4",
-                scale=Scales.MAJOR
-            ),
-            RandomNotes(sess, autumn_water, key="C#", octave=5, scale=Scales.PENTATONIC)
-        )
-        
-        
-    # section = use_random(['intro', 'solo'], sess=sess, every_bars=2)
+        chord_track = dune
+        melody_track = piano
 
-    # if section == 'intro':
-    #     return PianoFlourish(sess, key="F", octave=5, scale=Scales.PENTATONIC)
-    # elif section == 'solo':
-    #     return Dune(sess, key="F4")
+    return Group(
+        RandomChords(
+            sess,
+            track=chord_track,
+            root="C#4",
+            scale=Scales.MAJOR
+        ),
+        RandomNotes(sess, track=melody_track, root="C#5", scale=Scales.PENTATONIC)
+    )
