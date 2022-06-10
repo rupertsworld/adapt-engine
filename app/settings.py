@@ -1,1 +1,3 @@
-SAMPLE_PATH = "/Users/rp/Code/adapt-engine/samples"
+import os
+
+SAMPLE_PATH = os.environ["ADAPT_SAMPLE_PATH"]
