@@ -30,53 +30,24 @@ def update(sess_id):
     sessions[sess_id].update_params(params)
     return "OK!"
 
-@app.route("/stream/<string:sess_id>.aac")
-def stream_aac(sess_id):
+@app.route("/stream/<string:sess_id>.<string:fmt>")
+def stream(sess_id, fmt):
     if not sess_id in sessions:
         sessions[sess_id] = adapt.Session(Main)
     
     def generate():
         end_time = datetime.now().timestamp()
+        is_first_run = True
 
         while True:
             curr_time = datetime.now().timestamp()
-            if (end_time - curr_time) > stream_buffer_secs:
-                continue
-
-            end_time += render_length
+            if (end_time - curr_time) > stream_buffer_secs: continue
             chunk = sessions[sess_id].render(render_length)
-
-            yield encode(chunk)
-
-    return Response(generate(), mimetype="audio/aac")
-
-@app.route("/stream/<string:sess_id>.wav")
-def stream_wav(sess_id):
-    if not sess_id in sessions:
-        sessions[sess_id] = adapt.Session(Main)
-    
-    def generate():
-        end_time = datetime.now().timestamp()
-        first_run = True
-
-        while True:
-            # If we have already streamed enough, stop
-            curr_time = datetime.now().timestamp()
-            if (end_time - curr_time) > stream_buffer_secs:
-                continue
-
-            chunk = sessions[sess_id].render(render_length)
-            
-            if first_run:
-                wav_header = generate_header(chunk, sample_rate)
-                yield wav_header + bytes_from_audio(chunk)
-            else:
-                yield bytes_from_audio(chunk)
-            
-            first_run = False
+            yield encode(chunk, fmt=fmt, header=is_first_run)
+            is_first_run = False
             end_time += render_length
 
-    return Response(generate(), mimetype="audio/x-wav")
+    return Response(generate(), mimetype=f"audio/{fmt}")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)

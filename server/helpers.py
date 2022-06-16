@@ -31,20 +31,37 @@ def generate_header(data, sample_rate):
     header_data += struct.pack('<I', datasize)
     return header_data
 
-# "adts"
-def encode(wav_data, to_format="adts", sample_rate=44100, n_channels=2):
-    with io.BytesIO() as new_file:
 
+header_size = {
+    "adts": 7
+}
+
+def encode(chunk, header=True, fmt="adts", sample_rate=44100, n_channels=2):
+    if fmt == "wav":
+        if header:
+            wav_header = generate_header(chunk, sample_rate)
+            return wav_header + bytes_from_audio(chunk)
+        else:
+            return bytes_from_audio(chunk)
+
+    if fmt == "aac": fmt = "adts"
+    
+    with io.BytesIO() as new_file:
         segment = AudioSegment(
-            wav_data.tobytes(),
+            chunk.tobytes(),
             frame_rate=sample_rate,
-            sample_width=wav_data.dtype.itemsize,
+            sample_width=chunk.dtype.itemsize,
             channels=n_channels
         )
 
         segment.export(
             new_file,
-            format=to_format
+            format=fmt
         )
 
-        return new_file.getvalue()
+        if header and fmt in header_size:
+            header = new_file.read(header_size[fmt])
+            data = new_file.read()
+            return data
+        else:
+            return new_file.read()
