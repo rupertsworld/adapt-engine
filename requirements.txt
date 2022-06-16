@@ -5,3 +5,4 @@ flask-cors==3.0.10
 uwsgi==2.0.20
 boto3==1.23.10
 pydub==0.25.1
+soundfile==0.10.3

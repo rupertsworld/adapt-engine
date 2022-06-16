@@ -1,4 +1,7 @@
-import struct
+import struct, io
+import numpy as np
+from pydub import AudioSegment
+import soundfile as sf
 
 def bytes_from_audio(data):
     return data.ravel().view('b').tobytes()
@@ -27,3 +30,21 @@ def generate_header(data, sample_rate):
     header_data += b'data'
     header_data += struct.pack('<I', datasize)
     return header_data
+
+# "adts"
+def encode(wav_data, to_format="adts", sample_rate=44100, n_channels=2):
+    with io.BytesIO() as new_file:
+
+        segment = AudioSegment(
+            wav_data.tobytes(),
+            frame_rate=sample_rate,
+            sample_width=wav_data.dtype.itemsize,
+            channels=n_channels
+        )
+
+        segment.export(
+            new_file,
+            format=to_format
+        )
+
+        return new_file.getvalue()

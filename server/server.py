@@ -1,7 +1,7 @@
 from flask import Flask, Response, send_file, request
 from flask_cors import CORS
 from uuid import uuid4
-from server.helpers import generate_header, bytes_from_audio
+from server.helpers import generate_header, bytes_from_audio, encode
 from datetime import datetime
 from app.main import Main
 import adapt
@@ -10,8 +10,9 @@ app = Flask(__name__, static_folder="../www")
 CORS(app, origins='*')
 
 sessions = {}
+generators = []
 
-render_length = 1
+render_length = 0.5
 sample_rate = 44100
 stream_buffer_secs = render_length * 0.5
 bits_per_sample = 32
@@ -29,8 +30,31 @@ def update(sess_id):
     sessions[sess_id].update_params(params)
     return "OK!"
 
-@app.route("/stream/<string:sess_id>")
-def stream(sess_id):
+@app.route("/stream/<string:sess_id>.aac")
+def stream_aac(sess_id):
+    if not sess_id in sessions:
+        sessions[sess_id] = adapt.Session(Main)
+    
+    def generate():
+        end_time = datetime.now().timestamp()
+
+        while True:
+            curr_time = datetime.now().timestamp()
+            if (end_time - curr_time) > stream_buffer_secs:
+                continue
+
+            end_time += render_length
+            chunk = sessions[sess_id].render(render_length)
+
+            yield encode(chunk)
+
+    return Response(generate(), mimetype="audio/aac")
+
+@app.route("/stream/<string:sess_id>.wav")
+def stream_wav(sess_id):
+    if not sess_id in sessions:
+        sessions[sess_id] = adapt.Session(Main)
+    
     def generate():
         end_time = datetime.now().timestamp()
         first_run = True

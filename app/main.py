@@ -13,7 +13,7 @@ def Main(sess):
         melody_track = piano
     else:
         chord_track = dune
-        melody_track = piano
+        melody_track = autumn_water
 
     return Group(
         RandomChords(
