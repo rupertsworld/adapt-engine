@@ -13,7 +13,7 @@ def Main(sess):
         melody_track = piano
     else:
         chord_track = dune
-        melody_track = piano
+        melody_track = autumn_water
 
     return Group(
         RandomChords(
@@ -22,5 +22,5 @@ def Main(sess):
             root="C#4",
             scale=Scales.MAJOR
         ),
-        RandomNotes(sess, track=melody_track, root="C#5", scale=Scales.PENTATONIC)
+        # RandomNotes(sess, track=melody_track, root="C#5", scale=Scales.PENTATONIC)
     )
