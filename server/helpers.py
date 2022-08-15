@@ -1,7 +1,5 @@
 import struct, io
-import numpy as np
 from pydub import AudioSegment
-import soundfile as sf
 
 def bytes_from_audio(data):
     return data.ravel().view('b').tobytes()
