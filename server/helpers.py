@@ -33,8 +33,8 @@ def generate_wav_header(data, sample_rate):
 
 
 header_size = {
-    # "adts": 7,
-    # "mp3": 32,
+#     "adts": 7,
+#     "mp3": 32,
 }
 
 def encode(chunk, header=True, fmt="adts", sample_rate=44100, n_channels=2):
@@ -61,8 +61,8 @@ def encode(chunk, header=True, fmt="adts", sample_rate=44100, n_channels=2):
         )
 
         if (not header) and (fmt in header_size):
-            header = new_file.read(header_size[fmt])
-    
-        data = new_file.read()
+            data = new_file.read(header_size[fmt])
+        else:
+            data = new_file.read()
         return data
             
