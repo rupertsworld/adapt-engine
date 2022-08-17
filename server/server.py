@@ -54,7 +54,7 @@ def stream(sess_id):
             .split(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+            stderr=subprocess.STDOUT)
         poll = select.poll()
         poll.register(pipe.stdout, select.POLLIN)
 
@@ -63,7 +63,6 @@ def stream(sess_id):
             if (end_time - curr_time) > stream_buffer_secs: continue
             audio = sessions[sess_id].render(render_length)
             pipe.stdin.write(audio)
-            print("render length", end_time)
             end_time += render_length
         
             while poll.poll(0):
