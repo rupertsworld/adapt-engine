@@ -50,22 +50,26 @@ def stream(sess_id):
         end_time = datetime.now().timestamp()
         
         pipe = subprocess.Popen(
-            'ffmpeg -f s16le -acodec pcm_s16le -ar 44100 -ac 2 -i pipe: -f mp3 pipe:'
-            .split(),
+            'ffmpeg -f s16le -acodec pcm_s16le -ar 44100 -ac 2 -i pipe: -f mp3 pipe:'.split(),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+            stderr=subprocess.PIPE)
         poll = select.poll()
         poll.register(pipe.stdout, select.POLLIN)
 
         while True:
             curr_time = datetime.now().timestamp()
+            print("Still in True loop")
             if (end_time - curr_time) > stream_buffer_secs: continue
+            print("Still rendering audio")
             audio = sessions[sess_id].render(render_length)
+            if isinstance(audio, list): print("Got audio")
             pipe.stdin.write(audio)
             end_time += render_length
         
             while poll.poll(0):
+                print("Still polling")
+                # print(pipe.stderr.readline())
                 yield pipe.stdout.readline()
                 
     return Response(
