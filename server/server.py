@@ -59,7 +59,6 @@ def stream(sess_id):
 
         while True:
             curr_time = datetime.now().timestamp()
-            print("Still in True loop")
             if (end_time - curr_time) > stream_buffer_secs: continue
             print("Still rendering audio")
             audio = sessions[sess_id].render(render_length)
