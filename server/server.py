@@ -1,4 +1,4 @@
-import select, subprocess, numpy
+import select, subprocess, numpy, re
 from flask import Flask, Response, send_file, request
 from flask_cors import CORS
 from uuid import uuid4
@@ -40,16 +40,15 @@ def stream(sess_id):
     if not sess_id in sessions:
         sessions[sess_id] = adapt.Session(Main)
 
-    if "range" in request.headers:
+    if "range" in request.headers and not re.search("bytes=[0-9]*-$", request.headers['range']):
         # This is a hack that handles range requests from Safari
-        # TODO: Update so it checks for a specific byte range (for Chrome)
         chunk = sessions[sess_id].render(render_length)
         data = encode(chunk, 'mp3')
         return Response(data, mimetype=f"audio/mpeg", status=206)
 
     def generate():
         end_time = datetime.now().timestamp()
-        print("Generating end time")
+        
         pipe = subprocess.Popen(
             'ffmpeg -f s16le -acodec pcm_s16le -ar 44100 -ac 2 -i pipe: -f mp3 pipe:'
             .split(),
